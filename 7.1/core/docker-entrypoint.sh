@@ -6,6 +6,13 @@ sed -i "s/MYSERVERNAME/$SERVERNAME/g" /etc/apache2/apache2.conf
 sed -i "s/MYSERVERALIAS/$SERVERALIAS/g" /etc/apache2/apache2.conf
 sed -i "s/MYDOCUMENTROOT/$DOCUMENTROOT/g" /etc/apache2/apache2.conf
 
+# If docker secret exists for custom/sensitive prod_apache2_configuration, use the file instead
+if [ -f /run/secrets/prod_apache2_configuration ]; then
+   echo "Using secret prod_apache2_configuration"
+   rm /etc/apache2/apache2.conf
+   cp /run/secrets/prod_apache2_configuration /etc/apache2/apache2.conf
+fi
+
 # Set the apache user and group to match the host user.
 # This script will change the web UID/GID in the container from to 999 (default) to the UID/GID of the host user, if the current host user is not root.
 OWNER=$(stat -c '%u' /var/www/html)
