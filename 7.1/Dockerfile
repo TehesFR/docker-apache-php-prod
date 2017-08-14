@@ -108,6 +108,12 @@ RUN cd /usr/local/src/drush && git checkout 8.1.12
 RUN ln -s /usr/local/src/drush/drush /usr/bin/drush
 RUN cd /usr/local/src/drush && composer update && composer install
 
+# Apache2 config
+COPY config/apache2.conf /etc/apache2
+COPY core/envvars /etc/apache2
+COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
+RUN rm /etc/apache2/sites-enabled/000-default.conf
+
 # Installation of Opcode cache
 RUN ( \
   echo "opcache.memory_consumption=128"; \
