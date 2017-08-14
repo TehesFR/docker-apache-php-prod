@@ -6,7 +6,7 @@ sed -i "s/MYSERVERNAME/$SERVERNAME/g" /etc/apache2/apache2.conf
 sed -i "s/MYSERVERALIAS/$SERVERALIAS/g" /etc/apache2/apache2.conf
 sed -i "s/MYDOCUMENTROOT/$DOCUMENTROOT/g" /etc/apache2/apache2.conf
 
-# If docker secret exists for custom/sensitive prod_apache2_configuration, use the file instead
+# If docker secret prod_apache2_configuration exists for custom/sensitive configuration, use the file instead
 if [ -f /run/secrets/prod_apache2_configuration ]; then
    echo "Using secret prod_apache2_configuration"
    rm /etc/apache2/apache2.conf
