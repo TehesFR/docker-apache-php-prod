@@ -6,11 +6,11 @@ sed -i "s/MYSERVERNAME/$SERVERNAME/g" /etc/apache2/apache2.conf
 sed -i "s/MYSERVERALIAS/$SERVERALIAS/g" /etc/apache2/apache2.conf
 sed -i "s/MYDOCUMENTROOT/$DOCUMENTROOT/g" /etc/apache2/apache2.conf
 
-# If docker secret prod_apache2_configuration exists for custom/sensitive configuration, use the file instead
-if [ -f /run/secrets/prod_apache2_configuration ]; then
-   echo "Using secret prod_apache2_configuration"
+# If docker secret apache2_configuration exists for custom/sensitive configuration, use the file instead
+if [ -f /run/secrets/apache2_configuration ]; then
+   echo "Using secret apache2_configuration"
    rm /etc/apache2/apache2.conf
-   cp /run/secrets/prod_apache2_configuration /etc/apache2/apache2.conf
+   cp /run/secrets/apache2_configuration /etc/apache2/apache2.conf
 fi
 
 # Set the apache user and group to match the host user.
