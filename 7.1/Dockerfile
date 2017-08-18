@@ -147,7 +147,6 @@ VOLUME /var/www/html
 # create directory for ssh keys
 RUN mkdir /var/www/.ssh/
 RUN chown -R web:www-data /var/www/
-RUN chmod -R 600 /var/www/.ssh/
 
 # Set timezone to Europe/Paris
 RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata

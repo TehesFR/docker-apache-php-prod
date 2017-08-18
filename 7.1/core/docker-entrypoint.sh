@@ -17,6 +17,7 @@ fi
 if [ -f /run/secrets/ssh_public_key ]; then
    echo "Using secret ssh_public_key"
    cp /run/secrets/ssh_public_key /var/www/.ssh/id_rsa.pub
+   chown -R web:www-data /var/www/.ssh
 fi
 
 # If docker secret ssh_private_key exists copy it in /var/www/.ssh
@@ -24,6 +25,7 @@ if [ -f /run/secrets/ssh_private_key ]; then
    echo "Using secret ssh_private_key"
    cp /run/secrets/ssh_private_key /var/www/.ssh/id_rsa
    chmod 600 /var/www/.ssh/id_rsa
+   chown -R web:www-data /var/www/.ssh
 fi
 
 # Set the apache user and group to match the host user.
