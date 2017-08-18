@@ -13,6 +13,19 @@ if [ -f /run/secrets/apache2_configuration ]; then
    cp /run/secrets/apache2_configuration /etc/apache2/apache2.conf
 fi
 
+# If docker secret ssh_public_key exists copy it in /var/www/.ssh
+if [ -f /run/secrets/ssh_public_key ]; then
+   echo "Using secret ssh_public_key"
+   cp /run/secrets/ssh_public_key /var/www/.ssh/id_rsa.pub
+fi
+
+# If docker secret ssh_private_key exists copy it in /var/www/.ssh
+if [ -f /run/secrets/ssh_private_key ]; then
+   echo "Using secret ssh_private_key"
+   cp /run/secrets/ssh_private_key /var/www/.ssh/id_rsa
+   chmod 600 /var/www/.ssh/id_rsa
+fi
+
 # Set the apache user and group to match the host user.
 # This script will change the web UID/GID in the container from to 999 (default) to the UID/GID of the host user, if the current host user is not root.
 OWNER=$(stat -c '%u' /var/www/html)
