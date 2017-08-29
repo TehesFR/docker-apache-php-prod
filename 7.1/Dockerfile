@@ -129,6 +129,11 @@ RUN rm -rf /var/www/html && \
   chown -R web:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
 RUN a2enmod rewrite expires ssl && service apache2 restart
 
+# installation of ssmtp
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
+ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
+ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
+
 # Install Drupal Console for Drupal 8
 RUN curl https://drupalconsole.com/installer -L -o drupal.phar && mv drupal.phar /usr/local/bin/drupal && chmod +x /usr/local/bin/drupal
 
