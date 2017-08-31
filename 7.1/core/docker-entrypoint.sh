@@ -40,7 +40,7 @@ USERNAME=web
 if [ "$OWNER" != "0" ]; then
   usermod -o -u $OWNER $USERNAME
   groupmod -o -g $GROUP www-data
-  chown -R --silent $USERNAME:www-data /var/www
+  #chown -R --silent $USERNAME:www-data /var/www
 fi
 
 # Apache gets grumpy about PID files pre-existing
