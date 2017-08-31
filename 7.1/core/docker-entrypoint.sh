@@ -6,6 +6,9 @@ sed -i "s/MYSERVERNAME/$SERVERNAME/g" /etc/apache2/apache2.conf
 sed -i "s/MYSERVERALIAS/$SERVERALIAS/g" /etc/apache2/apache2.conf
 sed -i "s/MYDOCUMENTROOT/$DOCUMENTROOT/g" /etc/apache2/apache2.conf
 
+# Configure email sender address because default will be "web@container_id" going right into spam
+sed -i "s/MYFROMADDRESS/$FROMADDRESS/g" /etc/ssmtp/ssmtp.conf
+
 # If docker secret apache2_configuration exists for custom/sensitive configuration, use the file instead
 if [ -f /run/secrets/apache2_configuration ]; then
    echo "Using secret apache2_configuration"
