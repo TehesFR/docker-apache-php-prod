@@ -8,7 +8,6 @@ sed -i "s/MYDOCUMENTROOT/$DOCUMENTROOT/g" /etc/apache2/apache2.conf
 
 # Configure email sender domain to avoid the use of "web@container_id" and going to spam
 sed -i "s/MY_EMAIL_DOMAIN/$EMAIL_DOMAIN/g" /etc/ssmtp/ssmtp.conf
-sed -i "s/MY_EMAIL_FROM_ADDRESS/$EMAIL_FROM_ADDRESS/g" /etc/ssmtp/ssmtp.conf
 
 # If docker secret apache2_configuration exists for custom/sensitive configuration, use the file instead
 if [ -f /run/secrets/apache2_configuration ]; then
