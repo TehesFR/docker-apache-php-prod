@@ -50,6 +50,7 @@ RUN docker-php-ext-install mcrypt
 RUN docker-php-ext-install mbstring zip
 
 # install pecl extensions
+#RUN pecl install imagick-3.4.3 && docker-php-ext-enable imagick 
 RUN apt-get update && apt-get install -y libmagickwand-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
 RUN pecl install imagick-3.4.3 && docker-php-ext-enable imagick
 
@@ -84,10 +85,17 @@ RUN rm -rf /var/www/html && \
 RUN a2enmod rewrite expires ssl
 
 # installation of ssmtp
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
-ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
+#RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install --fix-missing -y ssmtp && rm -r /var/lib/apt/lists/*
+#ADD core/ssmtp.conf /etc/ssmtp/ssmtp.conf
+#ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
+#ADD core/revaliases /etc/ssmtp/revaliases
+
+# install msmtp
+RUN set -x \
+    && DEBIAN_FRONTEND=noninteractive \
+    && apt-get update && apt-get install -y --no-install-recommends msmtp && rm -r /var/lib/apt/lists/*
+ADD core/msmtprc.conf /usr/local/etc/msmtprc
 ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
-ADD core/revaliases /etc/ssmtp/revaliases
 
 VOLUME /var/www/html
 
