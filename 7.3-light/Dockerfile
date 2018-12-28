@@ -8,7 +8,10 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   vim \
   zip \
   wget \
-  htop
+  htop \
+  iputils-ping \
+  dnsutils \
+  telnet
 
 # Create new web user for apache and grant sudo without password
 RUN useradd web -d /var/www -g www-data -s /bin/bash
