@@ -26,7 +26,7 @@ COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 # Install php extensions
-RUN docker-php-ext-install opcache
+RUN docker-php-ext-install opcache pdo_mysql
 
 # Installation of Opcode cache
 RUN ( \
