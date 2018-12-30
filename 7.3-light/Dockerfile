@@ -11,7 +11,8 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   htop \
   iputils-ping \
   dnsutils \
-  telnet
+  telnet \
+  mysql-client
 
 # Create new web user for apache and grant sudo without password
 RUN useradd web -d /var/www -g www-data -s /bin/bash
