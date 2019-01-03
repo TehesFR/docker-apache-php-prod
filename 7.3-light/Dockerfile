@@ -26,9 +26,16 @@ COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 # Install php extensions
-RUN docker-php-ext-install opcache pdo_mysql
+RUN docker-php-ext-install opcache pdo_mysql mysqli curl gd mbstring
 
-# Installation of Opcode cache
+# Install APCu extension
+RUN pecl install apcu-5.1.16
+RUN ( \
+  echo "extension=apcu.so"; \
+  echo "apc.enabled=1"; \
+  ) > /usr/local/etc/php/conf.d/ext-apcu.ini
+
+# Config of Opcode cache
 RUN ( \
   echo "opcache.enable=1"; \
   echo "opcache.enable_cli=1"; \
