@@ -12,7 +12,9 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   iputils-ping \
   dnsutils \
   telnet \
-  mysql-client
+  mysql-client \
+  libjpeg-dev \
+  libpng-dev
 
 # Create new web user for apache and grant sudo without password
 RUN useradd web -d /var/www -g www-data -s /bin/bash
@@ -26,7 +28,8 @@ COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 # Install php extensions
-RUN docker-php-ext-install opcache pdo_mysql mysqli curl gd mbstring
+RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr;
+RUN docker-php-ext-install opcache pdo_mysql mysqli gd mbstring zip
 
 # Install APCu extension
 RUN pecl install apcu-5.1.16
