@@ -28,7 +28,7 @@ COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 # Install php extensions
-RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr;
+RUN docker-php-ext-configure gd --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/;
 RUN docker-php-ext-install opcache pdo_mysql mysqli gd mbstring zip
 
 # Install APCu extension
