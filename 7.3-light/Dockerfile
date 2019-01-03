@@ -14,7 +14,8 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   telnet \
   mysql-client \
   libjpeg-dev \
-  libpng-dev
+  libpng-dev \
+  libzip-dev
 
 # Create new web user for apache and grant sudo without password
 RUN useradd web -d /var/www -g www-data -s /bin/bash
