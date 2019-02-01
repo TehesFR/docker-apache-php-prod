@@ -14,7 +14,7 @@ Available tags are:
 version: '3.3'
 services:
   web:
-    image: tehes/docker-apache-php-prod/7.3-light
+    image: tehes/docker-apache-php-prod/7.3
     ports:
       - "8080:80"
     environment:
@@ -24,9 +24,9 @@ services:
       - EMAIL_DOMAIN=mydomain.xyz
       # define the outgoing default email address, if not changed in the app code
       - OUTGOING_ADDRESS=no-reply@mydomain.xyz
-      # define the folder in /var/www/html where the files will be located
+      # folder in /var/www/html where the files will be located
       - DOCUMENTROOT=htdocs
-      # define the name of the smtp container (do not change)
+      # SMTP=name of the smtp container (do not change)
       - SMTP=smtp
     volumes:
       - type: bind

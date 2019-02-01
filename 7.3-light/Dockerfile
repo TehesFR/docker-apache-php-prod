@@ -1,7 +1,7 @@
 # Pull base image.
-FROM php:7.3.0-apache
-COPY config/php.ini /usr/local/etc/php/
+FROM php:7.3.1-apache
 
+# Install tools
 RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   sudo \
   git \
@@ -12,10 +12,7 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   iputils-ping \
   dnsutils \
   telnet \
-  mysql-client \
-  libjpeg-dev \
-  libpng-dev \
-  libzip-dev
+  mysql-client
 
 # Create new web user for apache and grant sudo without password
 RUN useradd web -d /var/www -g www-data -s /bin/bash
@@ -29,27 +26,19 @@ COPY core/other-vhosts-access-log.conf /etc/apache2/conf-enabled/
 RUN rm /etc/apache2/sites-enabled/000-default.conf
 
 # Install php extensions
-RUN docker-php-ext-configure gd --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/;
-RUN docker-php-ext-install opcache pdo_mysql mysqli gd mbstring zip
+RUN docker-php-ext-install opcache pdo_mysql
 
-# Install APCu extension
-RUN pecl install apcu-5.1.16
+# Custom Opcache
 RUN ( \
-  echo "extension=apcu.so"; \
-  echo "apc.enabled=1"; \
-  ) > /usr/local/etc/php/conf.d/ext-apcu.ini
-
-# Config of Opcode cache
-RUN ( \
-  echo "opcache.enable=1"; \
-  echo "opcache.enable_cli=1"; \
-  echo "opcache.memory_consumption=64"; \
+  echo "opcache.memory_consumption=128"; \
   echo "opcache.interned_strings_buffer=8"; \
   echo "opcache.max_accelerated_files=20000"; \
   echo "opcache.revalidate_freq=5"; \
   echo "opcache.fast_shutdown=1"; \
-  ) > /usr/local/etc/php/conf.d/opcache.ini
+  echo "opcache.enable_cli=1"; \
+  ) >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 
+# Apache bullshit
 RUN rm -rf /var/www/html && \
   mkdir -p /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html && \
   chown -R web:www-data /var/lock/apache2 /var/run/apache2 /var/log/apache2 /var/www/html
@@ -81,6 +70,9 @@ RUN echo "exec su - web" > /root/.bashrc && \
     echo ". .profile" > /var/www/.bashrc && \
     echo "alias ll='ls -al'" > /var/www/.profile && \
     echo "cd /var/www/html" >> /var/www/.profile
+
+# Custom php.ini
+COPY config/php.ini /usr/local/etc/php/
 
 # Set and run a custom entrypoint
 COPY core/docker-entrypoint.sh /
