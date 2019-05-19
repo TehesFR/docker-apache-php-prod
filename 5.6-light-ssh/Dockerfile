@@ -14,7 +14,8 @@ RUN set -ex; \
 		libpng-dev \
 		htop \
 		imagemagick \
-		zip \
+		libzip-dev \
+		zlib1g-dev \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
