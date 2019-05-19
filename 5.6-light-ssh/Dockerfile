@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y libmcrypt-dev libreadline-dev && rm -r 
 RUN docker-php-ext-install mcrypt
 
 # install other ext
-RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev && docker-php-ext-install mbstring zip
+RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev && docker-php-ext-install mbstring zip mysql
 
 # install pecl extensions
 #RUN pecl install imagick-3.4.3 && docker-php-ext-enable imagick 
