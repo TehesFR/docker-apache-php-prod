@@ -14,9 +14,10 @@ RUN set -ex; \
 		libpng-dev \
 		htop \
 		imagemagick \
+		libfreetype6-dev \
 	; \
 	\
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --with-freetype-dir=/usr --enable-gd-native-ttf; \
 	docker-php-ext-install gd mysqli opcache; \
 	\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
