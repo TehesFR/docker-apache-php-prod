@@ -152,14 +152,15 @@ ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
 # Install Drupal Console for Drupal 8
 RUN curl https://drupalconsole.com/installer -L -o drupal.phar && mv drupal.phar /usr/local/bin/drupal && chmod +x /usr/local/bin/drupal
 
-# Install WKHTMLTOPDF
+# Install WKHTMLTOPDF 0.12.5
 RUN apt-get update && apt-get remove -y libqt4-dev qt4-dev-tools wkhtmltopdf && apt-get autoremove -y
-RUN apt-get install openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig -y
-RUN mkdir /var/wkhtmltopdf
-RUN cd /var/wkhtmltopdf && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-RUN cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltopdf /bin/wkhtmltopdf && cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltoimage /bin/wkhtmltoimage
-RUN chown -R www-data:www-data /var/wkhtmltopdf
-RUN chmod +x /bin/wkhtmltopdf && chmod +x /bin/wkhtmltoimage
+RUN apt-get update && apt-get install -y wkhtmltopdf && apt-get autoremove -y
+# RUN apt-get install openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig -y
+# RUN mkdir /var/wkhtmltopdf
+# RUN cd /var/wkhtmltopdf && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+# RUN cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltopdf /bin/wkhtmltopdf && cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltoimage /bin/wkhtmltoimage
+# RUN chown -R web:www-data /var/wkhtmltopdf
+# RUN chmod +x /bin/wkhtmltopdf && chmod +x /bin/wkhtmltoimage
 
 # Apache2 config
 COPY config/apache2.conf /etc/apache2
