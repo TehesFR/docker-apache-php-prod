@@ -4,14 +4,11 @@ FROM php:7.3.15-apache
 # Install tools
 RUN apt-get clean && apt-get update && apt-get install --fix-missing wget apt-transport-https lsb-release ca-certificates gnupg2 -y
 RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
-  ruby-dev \
-  rubygems \
   imagemagick \
   graphviz \
   sudo \
   git \
   vim \
-  #php7.3-dev \
   memcached \
   libmemcached-tools \
   libmemcached-dev \
@@ -21,7 +18,6 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   libxml2-dev \
   libxslt1-dev \
   default-mysql-client \
-  #php7.3-mysql \
   zip \
   wget \
   linux-libc-dev \
@@ -37,19 +33,6 @@ RUN apt-get clean && apt-get update && apt-get install --fix-missing -y \
   telnet \
   dnsutils \
   iputils-ping
-
-# # postgresql-client-9.5
-# RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - && echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list && apt-get update && apt-get install -y postgresql-client-9.5
-
-# # Install memcached for PHP 7
-# RUN cd /tmp && git clone https://github.com/php-memcached-dev/php-memcached.git
-# RUN cd /tmp/php-memcached && sudo git checkout php7 && phpize && ./configure --disable-memcached-sasl && make && make install
-# RUN touch /usr/local/etc/php/conf.d/memcached.ini &&\
-#  echo "extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini
-# COPY core/memcached.conf /etc/memcached.conf
-
-# Install ext-lib
-#COPY docker-php-ext-install /usr/local/bin/
 
 RUN pecl install mcrypt-1.0.3 && \
   docker-php-ext-enable mcrypt
@@ -84,42 +67,12 @@ RUN ( \
   echo "apc.enabled=1"; \
   ) > /usr/local/etc/php/conf.d/ext-apcu.ini
 
-# Install sass and gem dependency
-RUN apt-get install --fix-missing automake ruby2.5-dev libtool -y
-
-# SASS and Compass installation
-RUN gem install sass -v 3.5.6 ;\
-  gem install compass;
-
 # Installation node.js
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && apt-get update && apt-get install -y nodejs && npm install npm@latest -g
-
-# Installation of LESS
-RUN npm install -g less && npm install -g less-plugin-clean-css
-
-# Installation of Grunt
-RUN npm install -g grunt-cli
-
-# Installation of Gulp
-RUN npm install -g gulp
-
-# Installation of Bower
-RUN npm install -g bower
 
 # Installation of Composer
 RUN cd /usr/src && curl -sS http://getcomposer.org/installer | php
 RUN cd /usr/src && mv composer.phar /usr/bin/composer
-
-# Installation of drush 8 & 9
-RUN git clone https://github.com/drush-ops/drush.git /usr/local/src/drush
-RUN cp -r /usr/local/src/drush/ /usr/local/src/drush8/
-RUN cp -r /usr/local/src/drush/ /usr/local/src/drush9/
-RUN cd /usr/local/src/drush8 && git checkout -f 8.1.0
-RUN cd /usr/local/src/drush8 && composer update && composer install
-RUN ln -s /usr/local/src/drush8/drush /usr/bin/drush8
-RUN cd /usr/local/src/drush9 && git checkout 9.1.0
-RUN cd /usr/local/src/drush9 && composer update && composer install
-RUN ln -s /usr/local/src/drush9/drush /usr/bin/drush9
 
 # Custom Opcache
 RUN ( \
@@ -149,22 +102,12 @@ RUN set -x \
 ADD core/msmtprc.conf /usr/local/etc/msmtprc
 ADD core/php-smtp.ini /usr/local/etc/php/conf.d/php-smtp.ini
 
-# Install Drupal Console for Drupal 8
-RUN curl https://drupalconsole.com/installer -L -o drupal.phar && mv drupal.phar /usr/local/bin/drupal && chmod +x /usr/local/bin/drupal
-
 # Install WKHTMLTOPDF 0.12.5
 RUN apt-get update && apt-get remove -y libqt4-dev qt4-dev-tools wkhtmltopdf && apt-get autoremove -y
 RUN apt-get update && apt-get install -y libjpeg62-turbo libfontenc1 xfonts-75dpi xfonts-base xfonts-encodings xfonts-utils openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
 RUN cd /tmp && wget https://downloads.wkhtmltopdf.org/0.12/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
 RUN cd /tmp && dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb
 RUN apt --fix-broken install
-# RUN apt-get update && apt-get install -y wkhtmltopdf && apt-get autoremove -y
-# RUN apt-get install openssl build-essential libssl-dev libxrender-dev git-core libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig -y
-# RUN mkdir /var/wkhtmltopdf
-# RUN cd /var/wkhtmltopdf && wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz && tar xf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
-# RUN cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltopdf /bin/wkhtmltopdf && cp /var/wkhtmltopdf/wkhtmltox/bin/wkhtmltoimage /bin/wkhtmltoimage
-# RUN chown -R web:www-data /var/wkhtmltopdf
-# RUN chmod +x /bin/wkhtmltopdf && chmod +x /bin/wkhtmltoimage
 
 # Apache2 config
 COPY config/apache2.conf /etc/apache2
@@ -180,7 +123,7 @@ RUN mkdir /var/www/.ssh/
 RUN chown -R web:www-data /var/www/
 
 # Set timezone to Europe/Paris
-RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+RUN ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
 # Expose 80,443 for apache
 EXPOSE 80 443
